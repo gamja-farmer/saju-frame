@@ -1,0 +1,23 @@
+{
+  "landing": {
+    "headline": "你是不是也有這種感覺？",
+    "cta": "查看你的命盤解讀"
+  },
+  "input": {
+    "birthdate": "出生日期",
+    "birthtime": "出生時間",
+    "gender": "性別",
+    "submit": "開始解讀",
+    "optional": "不知道也沒關係"
+  },
+  "result": {
+    "impression": "整體印象",
+    "tendency": "性向框架",
+    "flow": "人生脈絡",
+    "terminology": "命盤用語"
+  },
+  "blog": {
+    "title": "文章",
+    "back": "返回列表"
+  }
+}

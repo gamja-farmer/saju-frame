@@ -1,0 +1,23 @@
+{
+  "landing": {
+    "headline": "Do you ever feel this way?",
+    "cta": "See your chart reading"
+  },
+  "input": {
+    "birthdate": "Date of birth",
+    "birthtime": "Time of birth",
+    "gender": "Gender",
+    "submit": "Start reading",
+    "optional": "Not sure? That's okay"
+  },
+  "result": {
+    "impression": "Overall impression",
+    "tendency": "Tendency frame",
+    "flow": "Life flow",
+    "terminology": "Chart terminology"
+  },
+  "blog": {
+    "title": "Articles",
+    "back": "Back to list"
+  }
+}

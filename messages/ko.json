@@ -1,0 +1,23 @@
+{
+  "landing": {
+    "headline": "당신도 이런 느낌이 있지 않나요?",
+    "cta": "내 명반 해석 보기"
+  },
+  "input": {
+    "birthdate": "생년월일",
+    "birthtime": "출생 시간",
+    "gender": "성별",
+    "submit": "해석 시작",
+    "optional": "모르셔도 괜찮아요"
+  },
+  "result": {
+    "impression": "전체 인상",
+    "tendency": "성향 프레임",
+    "flow": "삶의 흐름",
+    "terminology": "사주 용어"
+  },
+  "blog": {
+    "title": "글",
+    "back": "목록으로"
+  }
+}
