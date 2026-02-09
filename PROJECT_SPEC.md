@@ -170,3 +170,51 @@
 - 사용자가 자기 인생을 설명할 언어를 빌려주는 서비스다  
 
 ---
+
+## 11. 현재 구현 계획
+
+논의를 통해 확정된 설계와 우선순위. 구현 시 이 섹션을 기준으로 진행한다.
+
+### 11.1 현재 구현 상태 요약
+
+| 영역 | 상태 | 비고 |
+|------|------|------|
+| 라우팅·i18n | 완료 | `[locale]`, input, result/[type], blog, zh-TW/ko/en 메시지 |
+| 사주 계산 | 골격만 | calculator.ts 규칙 있음, calendar.ts 양력=음력 반환 (TODO) |
+| 분류 | 완료 | classifier.ts → 10개 SajuType |
+| 해석 조합 | 완료 | composer.ts + locale별 템플릿 |
+| 입력 페이지 | UI만 | input 폼 마크업·번역만, submit/연동 없음 |
+| 결과 페이지 | 더미 데이터 | result/[type] 고정 pillar 사용, 실제 입력과 미연결 |
+| 해석 문장 | 비어 있음 | zh-TW 템플릿 빈 배열 → 결과 "—" |
+| 랜딩 | 최소 | 헤드라인 + CTA만 |
+| 블로그 | 구조만 | 목록/슬러그 있음, 글 없음 |
+
+### 11.2 확정 설계
+
+- **결과 공유**: 생년월일 제외. (type, variantIndex) 만 URL. 타입당 K개 변형 미리 정의, 정적/세그먼트 기반. 공유 시 동일 URL = 동일 결과.
+- **K**: 5. 타입당 5개 변형(0~4), 전체 50개 결과 세트.
+- **결과 URL**: `/result/[type]/[v]` (세그먼트). v 없이 접근 시 → 입력 유도 리다이렉트.
+- **콘텐츠 구조 (방향 2)**: 기존 4배열(impression, tendency, flow, terminology) 유지. (type, v)로 세트를 조합해 반환하는 레이어(getVariantContent 등)만 추가.
+- **음력 변환**: **lunar-typescript** npm 라이브러리. `src/lib/calendar.ts`의 solarToLunar를 해당 라이브러리 호출로 대체 예정.
+
+### 11.3 작업 항목 및 우선순위
+
+1. **C. 해석 콘텐츠 채우기 (zh-TW)** — 1순위. 10타입×K(5) 변형에 맞게 4단계 문장 추가, 방향 2 인덱스 설계.
+2. **A. 입력→결과 연결**: 폼 연동, Server Action → `/result/[type]/[v]` redirect, getVariantContent 조회, v 없을 때 리다이렉트.
+3. **B. 음력 변환**: lunar-typescript 도입, calendar.ts 교체.
+4. **D. 랜딩·결과 UX**: 공감 문장·서비스 설명, 결과 페이지 용어 접기/펼치기.
+5. **E. 블로그·SEO**: zh-TW 공감형 1~2편, CTA 연결.
+
+### 11.4 확정 사항 요약
+
+| 항목 | 확정 내용 |
+|------|-----------|
+| 결과 공유 | (type, variantIndex) 만 URL, K개 변형, 정적/세그먼트 |
+| K | 5 |
+| 1순위 | C (해석 콘텐츠) |
+| 결과 URL | `/result/[type]/[v]` |
+| v 없이 접근 | 입력 유도 리다이렉트 |
+| 콘텐츠 구조 | 방향 2 (4배열 유지 + (type,v) 조회) |
+| 음력 | lunar-typescript |
+
+---

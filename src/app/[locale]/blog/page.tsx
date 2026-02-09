@@ -1,7 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { routing } from '@/i18n/routing';
+import { getBlogPosts } from '@/content/blog';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -30,10 +32,21 @@ export default async function BlogListPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('blog');
+  const posts = getBlogPosts(locale);
   return (
     <main>
       <h1>{t('title')}</h1>
-      <p>No posts yet.</p>
+      {posts.length === 0 ? (
+        <p>No posts yet.</p>
+      ) : (
+        <ul>
+          {posts.map((post) => (
+            <li key={post.slug}>
+              <Link href={`/${locale}/blog/${post.slug}`}>{post.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }

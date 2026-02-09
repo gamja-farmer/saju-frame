@@ -11,6 +11,9 @@ export default async function HomePage({ params }: Props) {
   return (
     <main>
       <h1>{t('headline')}</h1>
+      <p>{t('empathy1')}</p>
+      <p>{t('empathy2')}</p>
+      <p>{t('serviceIntro')}</p>
       <Link href={`/${locale}/input`}>{t('cta')}</Link>
     </main>
   );

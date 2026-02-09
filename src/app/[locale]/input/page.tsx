@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { routing } from '@/i18n/routing';
+import { InputForm } from './InputForm';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -21,9 +22,7 @@ export default async function InputPage({ params }: Props) {
     <main>
       <h1>{t('birthdate')}</h1>
       <p>{t('optional')}</p>
-      <form>
-        <button type="submit">{t('submit')}</button>
-      </form>
+      <InputForm locale={locale} />
     </main>
   );
 }
