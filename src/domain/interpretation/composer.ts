@@ -1,10 +1,24 @@
 /**
  * 해석 문장 조합기.
  * SajuType + pillar + locale → 3단계 오버뷰 + 4영역 해석.
+ * + FullInterpretationResult: Layer 1(요약) + Layer 2(분석단계) + Layer 3(구조화 해석).
  */
 
-import type { SajuPillar, SajuType } from '@/domain/saju/types';
+import type { FiveElement, SajuPillar, SajuType } from '@/domain/saju/types';
+import {
+  stemToChinese,
+  stemToElement,
+  elementToChinese,
+  calculateElementDistribution,
+} from '@/domain/saju/elements';
 import type { AreaTemplateSet } from './templates/areas/types';
+import type { StructuredAreaTemplate } from './templates/zh-TW/areas/structured/types';
+import type { AnalysisStep } from './analysisSteps';
+import { analysisStepTemplates } from './analysisSteps';
+import { TYPE_METADATA } from './typeMetadata';
+import { DISCLAIMER } from './glossary';
+
+/* ── 기존 locale별 템플릿 import ── */
 import { impressionTemplates as zhImpression } from './templates/zh-TW/impression';
 import { tendencyTemplates as zhTendency } from './templates/zh-TW/tendency';
 import { flowTemplates as zhFlow } from './templates/zh-TW/flow';
@@ -26,6 +40,12 @@ import { wealthTemplates as enWealth } from './templates/en/areas/wealth';
 import { loveTemplates as enLove } from './templates/en/areas/love';
 import { careerTemplates as enCareer } from './templates/en/areas/career';
 import { healthTemplates as enHealth } from './templates/en/areas/health';
+
+/* ── 구조화 템플릿 import (zh-TW만 — 타 locale은 추후) ── */
+import { structuredWealthTemplates as zhStructWealth } from './templates/zh-TW/areas/structured/wealth';
+import { structuredLoveTemplates as zhStructLove } from './templates/zh-TW/areas/structured/love';
+import { structuredCareerTemplates as zhStructCareer } from './templates/zh-TW/areas/structured/career';
+import { structuredHealthTemplates as zhStructHealth } from './templates/zh-TW/areas/structured/health';
 
 export type Locale = 'zh-TW' | 'ko' | 'en';
 
@@ -159,4 +179,159 @@ export function composeInterpretation(
 ): InterpretationResult {
   const seed = seedFromPillar(pillar);
   return getVariantContent(type, seed % VARIANT_COUNT, locale);
+}
+
+/* =====================================================
+ * Layer 1~3 + 신뢰도 장치를 포함하는 확장 결과 구조
+ * ===================================================== */
+
+/** Layer 1: 핵심 요약 블록 */
+export interface SummaryBlock {
+  dayMaster: { value: string; element: string; desc: string };
+  elementDistribution: Record<FiveElement, number>;
+  bodyStrength: { value: string; desc: string };
+  favorableGod: { value: string; desc: string };
+  typeCode: string;
+  typeLabel: string;
+}
+
+/** 전체 확장 해석 결과 */
+export interface FullInterpretationResult {
+  /** Layer 1: 핵심 요약 블록 */
+  summary: SummaryBlock;
+  /** Layer 2: 분석 단계 (4단계) */
+  analysisSteps: AnalysisStep[];
+  /** 기존 3단계 오버뷰 (Step 본문용) */
+  impression: string;
+  tendency: string;
+  flow: string;
+  /** 기존 4영역 해석 (카드 요약용) */
+  areas: Record<AreaKey, AreaInterpretation>;
+  /** Layer 3: 구조화 영역 해석 (상세 페이지용) */
+  structuredAreas: Record<AreaKey, StructuredAreaTemplate | null>;
+  /** 면책 성명 */
+  disclaimer: string;
+}
+
+/** 구조화 템플릿 번들 (현재 zh-TW만) */
+interface StructuredBundle {
+  wealth: Record<SajuType, StructuredAreaTemplate[]>;
+  love: Record<SajuType, StructuredAreaTemplate[]>;
+  career: Record<SajuType, StructuredAreaTemplate[]>;
+  health: Record<SajuType, StructuredAreaTemplate[]>;
+}
+
+function getStructuredTemplates(locale: Locale): StructuredBundle | null {
+  if (locale === 'zh-TW') {
+    return {
+      wealth: zhStructWealth,
+      love: zhStructLove,
+      career: zhStructCareer,
+      health: zhStructHealth,
+    };
+  }
+  // ko, en은 아직 구조화 템플릿 없음
+  return null;
+}
+
+function pickStructured(
+  arr: StructuredAreaTemplate[] | undefined,
+  v: number
+): StructuredAreaTemplate | null {
+  if (!arr || arr.length === 0) return null;
+  return arr[Math.abs(v) % arr.length];
+}
+
+/**
+ * (type, variantIndex) + locale + pillar → 확장 해석 결과.
+ * pillar가 있으면 개인별 五行 분포 계산, 없으면 타입 기반 기본값.
+ */
+export function getFullVariantContent(
+  type: SajuType,
+  variantIndex: number,
+  locale: Locale,
+  pillar?: SajuPillar
+): FullInterpretationResult {
+  // 기존 해석 결과
+  const base = getVariantContent(type, variantIndex, locale);
+  const v = Math.max(0, variantIndex);
+
+  // Layer 1: 요약 블록
+  const meta = TYPE_METADATA[type];
+  const dayStemChinese = pillar ? stemToChinese(pillar.dayStem) : '';
+  const dayElement = pillar ? stemToElement(pillar.dayStem) : meta.dominantElement;
+  const dayElementChinese = elementToChinese(dayElement);
+  const elementDist = pillar
+    ? calculateElementDistribution(pillar)
+    : getDefaultDistribution(meta.dominantElement, meta.subElement);
+
+  const summary: SummaryBlock = {
+    dayMaster: {
+      value: dayStemChinese ? `${dayStemChinese}${dayElementChinese}` : `${dayElementChinese}`,
+      element: dayElementChinese,
+      desc: meta.coreTraitSummary,
+    },
+    elementDistribution: elementDist,
+    bodyStrength: { value: meta.bodyStrength, desc: meta.bodyStrengthDesc },
+    favorableGod: { value: meta.favorableGod, desc: meta.favorableGodDesc },
+    typeCode: meta.code,
+    typeLabel: meta.label,
+  };
+
+  // Layer 2: 분석 단계
+  const steps = analysisStepTemplates[type] ?? [];
+
+  // Layer 3: 구조화 영역 해석
+  const structBundle = getStructuredTemplates(locale);
+  const structuredAreas: Record<AreaKey, StructuredAreaTemplate | null> = {
+    wealth: structBundle ? pickStructured(structBundle.wealth[type], v) : null,
+    love: structBundle ? pickStructured(structBundle.love[type], v) : null,
+    career: structBundle ? pickStructured(structBundle.career[type], v) : null,
+    health: structBundle ? pickStructured(structBundle.health[type], v) : null,
+  };
+
+  return {
+    summary,
+    analysisSteps: steps,
+    impression: base.impression,
+    tendency: base.tendency,
+    flow: base.flow,
+    areas: base.areas,
+    structuredAreas,
+    disclaimer: DISCLAIMER,
+  };
+}
+
+/**
+ * 타입 기반 기본 五行 분포 (pillar가 없을 때 사용).
+ * dominant 35%, sub 25%, 나머지 균등 분배.
+ */
+function getDefaultDistribution(
+  dominant: FiveElement,
+  sub: FiveElement
+): Record<FiveElement, number> {
+  const elements: FiveElement[] = ['wood', 'fire', 'earth', 'metal', 'water'];
+  const others = elements.filter((e) => e !== dominant && e !== sub);
+  const remaining = 40; // 100 - 35 - 25
+  const each = Math.floor(remaining / others.length);
+  const dist: Record<FiveElement, number> = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
+  dist[dominant] = 35;
+  dist[sub] = 25;
+  for (const o of others) dist[o] = each;
+  // 반올림 보정
+  const sum = Object.values(dist).reduce((a, b) => a + b, 0);
+  if (sum !== 100) dist[others[0]] += 100 - sum;
+  return dist;
+}
+
+/**
+ * 전체 확장 해석 조합 (pillar 포함).
+ */
+export function composeFullResult(
+  type: SajuType,
+  pillar: SajuPillar,
+  locale: Locale
+): FullInterpretationResult {
+  const seed = seedFromPillar(pillar);
+  return getFullVariantContent(type, seed % VARIANT_COUNT, locale, pillar);
 }
