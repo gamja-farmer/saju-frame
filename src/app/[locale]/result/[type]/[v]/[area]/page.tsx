@@ -107,100 +107,174 @@ export default async function AreaDetailPage({ params }: Props) {
   const structured = result.structuredAreas[area];
   const meta = TYPE_METADATA[type as keyof typeof TYPE_METADATA];
 
-  // 다른 영역 네비게이션용
   const otherAreas = AREA_KEYS.filter((k) => k !== area);
 
   return (
-    <main>
-      {/* 상단 네비게이션 + 타입 코드 */}
-      <nav>
-        <Link href={`/${locale}/result/${type}/${v}`}>
-          {t('backToOverview')}
+    <main className="mx-auto max-w-[680px] px-[20px] pb-xxl">
+      {/* ── 상단 네비게이션 ── */}
+      <nav className="pt-xl flex items-center justify-between">
+        <Link
+          href={`/${locale}/result/${type}/${v}`}
+          className="text-small text-accent-primary hover:opacity-80 transition-opacity duration-200"
+        >
+          ← {t('backToOverview')}
         </Link>
-        <span>{meta.code}</span>
+        <span className="text-small text-text-muted">{meta.code}</span>
       </nav>
 
-      {/* 영역 제목 + 근거 라벨 */}
-      <section>
-        <h1>{t(area)}</h1>
+      {/* ── 영역 제목 + 근거 라벨 ── */}
+      <section className="pt-xl">
+        <h1 className="text-hero font-heading leading-[1.4]">
+          {t(area)}
+        </h1>
         {structured && (
-          <p><small>「{structured.basisLabel}」</small></p>
+          <p className="mt-sm text-small text-accent-primary">
+            「{structured.basisLabel}」
+          </p>
         )}
       </section>
 
-      {/* ── Layer 3: 구조화 5섹션 해석 ── */}
+      {/* ── 구분선 ── */}
+      <hr className="my-xl" />
+
+      {/* ── 구조화 5섹션 해석 ── */}
       {structured ? (
-        <section>
+        <section className="flex flex-col">
           <article>
-            <h3>{SECTION_LABELS.structureBasis}</h3>
-            <p>{structured.structureBasis}</p>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              {SECTION_LABELS.structureBasis}
+            </h3>
+            <p className="mt-sm text-body text-text-primary leading-[1.8]">
+              {structured.structureBasis}
+            </p>
           </article>
 
-          <article>
-            <h3>{SECTION_LABELS.tendencyDesc}</h3>
-            <p>{structured.tendencyDesc}</p>
-          </article>
+          <hr className="my-xl" />
 
           <article>
-            <h3>{SECTION_LABELS.strengthInterp}</h3>
-            <p>{structured.strengthInterp}</p>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              {SECTION_LABELS.tendencyDesc}
+            </h3>
+            <p className="mt-sm text-body text-text-primary leading-[1.8]">
+              {structured.tendencyDesc}
+            </p>
           </article>
 
-          <article>
-            <h3>{SECTION_LABELS.riskInterp}</h3>
-            <p>{structured.riskInterp}</p>
-          </article>
+          <hr className="my-xl" />
 
           <article>
-            <h3>{SECTION_LABELS.practicalAdvice}</h3>
-            <p>{structured.practicalAdvice}</p>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              {SECTION_LABELS.strengthInterp}
+            </h3>
+            <p className="mt-sm text-body text-text-primary leading-[1.8]">
+              {structured.strengthInterp}
+            </p>
+          </article>
+
+          <hr className="my-xl" />
+
+          <article>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              {SECTION_LABELS.riskInterp}
+            </h3>
+            <p className="mt-sm text-body text-text-primary leading-[1.8]">
+              {structured.riskInterp}
+            </p>
+          </article>
+
+          <hr className="my-xl" />
+
+          <article>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              {SECTION_LABELS.practicalAdvice}
+            </h3>
+            <p className="mt-sm text-body text-text-primary leading-[1.8]">
+              {structured.practicalAdvice}
+            </p>
           </article>
         </section>
       ) : (
         /* 구조화 템플릿이 없는 경우 기존 main 텍스트 폴백 */
         <section>
-          <p>{areaResult.main || '—'}</p>
+          <p className="text-body text-text-primary leading-[1.8]">
+            {areaResult.main || '—'}
+          </p>
         </section>
       )}
 
-      {/* ── 보조 슬롯 (신뢰도 장치 재활용) ── */}
+      {/* ── 보조 슬롯 (補充說明) ── */}
       {(areaResult.auxiliaries.situationEmphasis ||
         areaResult.auxiliaries.misunderstandingBuffer ||
         areaResult.auxiliaries.timeContext) && (
-        <section>
-          <h3>補充說明</h3>
-          {areaResult.auxiliaries.situationEmphasis && (
-            <aside>
-              <p>{areaResult.auxiliaries.situationEmphasis}</p>
-            </aside>
-          )}
-          {areaResult.auxiliaries.misunderstandingBuffer && (
-            <aside>
-              <p>{areaResult.auxiliaries.misunderstandingBuffer}</p>
-            </aside>
-          )}
-          {areaResult.auxiliaries.timeContext && (
-            <aside>
-              <p>{areaResult.auxiliaries.timeContext}</p>
-            </aside>
-          )}
-        </section>
+        <>
+          <hr className="my-xl" />
+          <section>
+            <h3 className="text-sub font-heading leading-[1.4]">
+              補充說明
+            </h3>
+            <div className="mt-md flex flex-col gap-sm">
+              {areaResult.auxiliaries.situationEmphasis && (
+                <aside className="rounded-card bg-bg-soft px-sm py-sm">
+                  <p className="text-body text-text-secondary leading-[1.8]">
+                    {areaResult.auxiliaries.situationEmphasis}
+                  </p>
+                </aside>
+              )}
+              {areaResult.auxiliaries.misunderstandingBuffer && (
+                <aside className="rounded-card bg-bg-soft px-sm py-sm">
+                  <p className="text-body text-text-secondary leading-[1.8]">
+                    {areaResult.auxiliaries.misunderstandingBuffer}
+                  </p>
+                </aside>
+              )}
+              {areaResult.auxiliaries.timeContext && (
+                <aside className="rounded-card bg-bg-soft px-sm py-sm">
+                  <p className="text-body text-text-secondary leading-[1.8]">
+                    {areaResult.auxiliaries.timeContext}
+                  </p>
+                </aside>
+              )}
+            </div>
+          </section>
+        </>
       )}
 
+      {/* ── 구분선 ── */}
+      <hr className="my-xl" />
+
+      {/* ── 광고 슬롯 (하단 70% 이후) ── */}
+      <aside className="my-lg flex items-center justify-center min-h-[90px] border border-divider rounded-card">
+        <span className="text-small text-text-muted">Ad</span>
+      </aside>
+
       {/* ── 다른 영역으로 이동 ── */}
+      <hr className="my-xl" />
       <nav>
-        <h3>{t('otherAreas')}</h3>
-        <div>
+        <h3 className="text-sub font-heading leading-[1.4]">
+          {t('otherAreas')}
+        </h3>
+        <div className="mt-md flex flex-col gap-sm">
           {otherAreas.map((otherArea: AreaKey) => (
             <Link
               key={otherArea}
               href={`/${locale}/result/${type}/${v}/${otherArea}`}
+              className="text-body text-accent-primary hover:opacity-80 transition-opacity duration-200"
             >
-              {t(otherArea)}
+              {t(otherArea)} →
             </Link>
           ))}
         </div>
       </nav>
+
+      {/* ── 결과 총람으로 돌아가기 ── */}
+      <div className="pt-xl pb-lg flex justify-center">
+        <Link
+          href={`/${locale}/result/${type}/${v}`}
+          className="text-small text-text-muted hover:text-accent-primary transition-colors duration-200"
+        >
+          ← {t('backToOverview')}
+        </Link>
+      </div>
     </main>
   );
 }

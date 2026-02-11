@@ -19,10 +19,19 @@ export default async function InputPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations('input');
   return (
-    <main>
-      <h1>{t('birthdate')}</h1>
-      <p>{t('optional')}</p>
-      <InputForm locale={locale} />
+    <main className="mx-auto max-w-[680px] px-[20px] pb-xxl">
+      <section className="pt-xxl">
+        <h1 className="text-section font-heading leading-[1.4]">
+          {t('birthdate')}
+        </h1>
+        <p className="mt-md text-small text-text-muted leading-[1.8]">
+          {t('optional')}
+        </p>
+      </section>
+
+      <section className="pt-xl">
+        <InputForm locale={locale} />
+      </section>
     </main>
   );
 }

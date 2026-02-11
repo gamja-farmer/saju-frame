@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Colors ── */
+  --color-bg-primary: #F5F1E8;
+  --color-bg-soft: #FAF7F2;
+  --color-text-primary: #2C2C2C;
+  --color-text-secondary: #5E5E5E;
+  --color-text-muted: #A89F94;
+  --color-accent-primary: #7A5C3E;
+  --color-accent-soft: #C8B6A6;
+  --color-divider: #E6E0D8;
+
+  /* ── Spacing scale ── */
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-xxl: 64px;
+
+  /* ── Font sizes ── */
+  --font-size-hero: 30px;
+  --font-size-section: 22px;
+  --font-size-sub: 18px;
+  --font-size-body: 16px;
+  --font-size-small: 14px;
+
+  /* ── Border radius ── */
+  --radius-button: 999px;
+  --radius-card: 16px;
+  --radius-input: 12px;
+
+  /* ── Font families ── */
+  --font-heading: var(--font-noto-serif-tc), system-ui;
+  --font-body: var(--font-noto-sans-tc), system-ui;
+}
+
+/* ── Base styles ── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: var(--font-size-hero);
+  }
+
+  h2 {
+    font-size: var(--font-size-section);
+  }
+
+  h3 {
+    font-size: var(--font-size-sub);
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background-color: var(--color-divider);
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-text-primary);
+  }
+}
