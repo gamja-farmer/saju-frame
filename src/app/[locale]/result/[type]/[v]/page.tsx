@@ -2,10 +2,11 @@ import { getTranslations } from 'next-intl/server';
 import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { routing } from '@/i18n/routing';
 import { SAJU_TYPES, isSajuType } from '@/domain/saju/types';
-import { getVariantContent, VARIANT_COUNT } from '@/domain/interpretation/composer';
-import type { Locale } from '@/domain/interpretation/composer';
+import { getVariantContent, VARIANT_COUNT, AREA_KEYS } from '@/domain/interpretation/composer';
+import type { Locale, AreaKey } from '@/domain/interpretation/composer';
 
 type Props = { params: Promise<{ locale: string; type: string; v: string }> };
 
@@ -63,8 +64,10 @@ export default async function ResultVariantPage({ params }: Props) {
   const t = await getTranslations('result');
   const variantIndex = parseInt(v, 10);
   const result = getVariantContent(type, variantIndex, locale as Locale);
+
   return (
     <main>
+      {/* 오버뷰 3단계 */}
       <section>
         <h2>{t('impression')}</h2>
         <p>{result.impression || '—'}</p>
@@ -77,11 +80,27 @@ export default async function ResultVariantPage({ params }: Props) {
         <h2>{t('flow')}</h2>
         <p>{result.flow || '—'}</p>
       </section>
+
+      {/* 4개 영역 요약 카드 */}
       <section>
-        <details>
-          <summary>{t('terminology')}</summary>
-          <p>{result.terminology || '—'}</p>
-        </details>
+        <h2>{t('areasTitle')}</h2>
+        <div>
+          {AREA_KEYS.map((area: AreaKey) => {
+            const areaResult = result.areas[area];
+            return (
+              <Link
+                key={area}
+                href={`/${locale}/result/${type}/${v}/${area}`}
+              >
+                <article>
+                  <h3>{t(area)}</h3>
+                  <p>{areaResult.summary || '—'}</p>
+                  <span>{t('viewDetail')}</span>
+                </article>
+              </Link>
+            );
+          })}
+        </div>
       </section>
     </main>
   );

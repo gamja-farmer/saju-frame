@@ -17,7 +17,14 @@
     "impression": "전체 인상",
     "tendency": "성향 프레임",
     "flow": "삶의 흐름",
-    "terminology": "사주 용어"
+    "areasTitle": "네 가지 핵심 영역",
+    "wealth": "재물 해석",
+    "love": "연애 해석",
+    "career": "직장 해석",
+    "health": "건강 해석",
+    "viewDetail": "상세 해석 보기",
+    "backToOverview": "전체 보기로 돌아가기",
+    "otherAreas": "다른 영역"
   },
   "blog": {
     "title": "글",

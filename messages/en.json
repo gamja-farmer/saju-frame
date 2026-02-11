@@ -17,7 +17,14 @@
     "impression": "Overall impression",
     "tendency": "Tendency frame",
     "flow": "Life flow",
-    "terminology": "Chart terminology"
+    "areasTitle": "Four key areas",
+    "wealth": "Wealth reading",
+    "love": "Love reading",
+    "career": "Career reading",
+    "health": "Health reading",
+    "viewDetail": "View full reading",
+    "backToOverview": "Back to overview",
+    "otherAreas": "Other areas"
   },
   "blog": {
     "title": "Articles",

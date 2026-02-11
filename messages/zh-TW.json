@@ -17,7 +17,14 @@
     "impression": "整體印象",
     "tendency": "性向框架",
     "flow": "人生脈絡",
-    "terminology": "命盤用語"
+    "areasTitle": "四大面向解讀",
+    "wealth": "財運解讀",
+    "love": "感情解讀",
+    "career": "事業解讀",
+    "health": "健康解讀",
+    "viewDetail": "查看完整解讀",
+    "backToOverview": "返回總覽",
+    "otherAreas": "其他面向"
   },
   "blog": {
     "title": "文章",
