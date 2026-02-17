@@ -33,22 +33,22 @@ export default async function RootPage() {
   // 1. NEXT_LOCALE 쿠키 (사용자의 이전 선택)
   const cookieLocale = cookieStore.get('NEXT_LOCALE')?.value;
   if (cookieLocale && validLocales.has(cookieLocale)) {
-    redirect(`/${cookieLocale}`);
+    redirect(`/${cookieLocale}?from=page-cookie`);
   }
 
   // 2. Vercel IP 기반 국가 코드
   const country = headersList.get('x-vercel-ip-country') || '';
   const ipLocale = countryToLocale[country];
   if (ipLocale) {
-    redirect(`/${ipLocale}`);
+    redirect(`/${ipLocale}?from=page-ip`);
   }
 
   // 3. Accept-Language 헤더
   const langLocale = localeFromAcceptLanguage(headersList.get('accept-language'));
   if (langLocale) {
-    redirect(`/${langLocale}`);
+    redirect(`/${langLocale}?from=page-lang`);
   }
 
   // 4. 기본 로케일
-  redirect(`/${routing.defaultLocale}`);
+  redirect(`/${routing.defaultLocale}?from=page-default`);
 }
