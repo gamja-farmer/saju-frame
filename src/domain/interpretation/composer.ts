@@ -41,11 +41,15 @@ import { loveTemplates as enLove } from './templates/en/areas/love';
 import { careerTemplates as enCareer } from './templates/en/areas/career';
 import { healthTemplates as enHealth } from './templates/en/areas/health';
 
-/* ── 구조화 템플릿 import (zh-TW만 — 타 locale은 추후) ── */
+/* ── 구조화 템플릿 import ── */
 import { structuredWealthTemplates as zhStructWealth } from './templates/zh-TW/areas/structured/wealth';
 import { structuredLoveTemplates as zhStructLove } from './templates/zh-TW/areas/structured/love';
 import { structuredCareerTemplates as zhStructCareer } from './templates/zh-TW/areas/structured/career';
 import { structuredHealthTemplates as zhStructHealth } from './templates/zh-TW/areas/structured/health';
+import { structuredWealthTemplates as koStructWealth } from './templates/ko/areas/structured/wealth';
+import { structuredLoveTemplates as koStructLove } from './templates/ko/areas/structured/love';
+import { structuredCareerTemplates as koStructCareer } from './templates/ko/areas/structured/career';
+import { structuredHealthTemplates as koStructHealth } from './templates/ko/areas/structured/health';
 
 export type Locale = 'zh-TW' | 'ko' | 'en';
 
@@ -230,7 +234,15 @@ function getStructuredTemplates(locale: Locale): StructuredBundle | null {
       health: zhStructHealth,
     };
   }
-  // ko, en은 아직 구조화 템플릿 없음
+  if (locale === 'ko') {
+    return {
+      wealth: koStructWealth,
+      love: koStructLove,
+      career: koStructCareer,
+      health: koStructHealth,
+    };
+  }
+  // en은 아직 구조화 템플릿 없음
   return null;
 }
 
