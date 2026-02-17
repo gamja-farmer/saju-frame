@@ -14,9 +14,9 @@ import {
 import type { AreaTemplateSet } from './templates/areas/types';
 import type { StructuredAreaTemplate } from './templates/zh-TW/areas/structured/types';
 import type { AnalysisStep } from './analysisSteps';
-import { analysisStepTemplates } from './analysisSteps';
-import { TYPE_METADATA } from './typeMetadata';
-import { DISCLAIMER } from './glossary';
+import { getAnalysisSteps } from './analysisSteps';
+import { getTypeMetadata } from './typeMetadata';
+import { getDisclaimer } from './glossary';
 
 /* ── 기존 locale별 템플릿 import ── */
 import { impressionTemplates as zhImpression } from './templates/zh-TW/impression';
@@ -257,7 +257,7 @@ export function getFullVariantContent(
   const v = Math.max(0, variantIndex);
 
   // Layer 1: 요약 블록
-  const meta = TYPE_METADATA[type];
+  const meta = getTypeMetadata(locale)[type];
   const dayStemChinese = pillar ? stemToChinese(pillar.dayStem) : '';
   const dayElement = pillar ? stemToElement(pillar.dayStem) : meta.dominantElement;
   const dayElementChinese = elementToChinese(dayElement);
@@ -279,7 +279,7 @@ export function getFullVariantContent(
   };
 
   // Layer 2: 분석 단계
-  const steps = analysisStepTemplates[type] ?? [];
+  const steps = getAnalysisSteps(type, locale);
 
   // Layer 3: 구조화 영역 해석
   const structBundle = getStructuredTemplates(locale);
@@ -298,7 +298,7 @@ export function getFullVariantContent(
     flow: base.flow,
     areas: base.areas,
     structuredAreas,
-    disclaimer: DISCLAIMER,
+    disclaimer: getDisclaimer(locale),
   };
 }
 

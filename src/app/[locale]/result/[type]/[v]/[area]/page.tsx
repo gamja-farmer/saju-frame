@@ -13,7 +13,7 @@ import {
   isAreaKey,
 } from '@/domain/interpretation/composer';
 import type { Locale, AreaKey } from '@/domain/interpretation/composer';
-import { TYPE_METADATA } from '@/domain/interpretation/typeMetadata';
+import { getTypeMetadata } from '@/domain/interpretation/typeMetadata';
 
 type Props = {
   params: Promise<{ locale: string; type: string; v: string; area: string }>;
@@ -106,7 +106,7 @@ export default async function AreaDetailPage({ params }: Props) {
   const result = getFullVariantContent(type, variantIndex, locale as Locale);
   const areaResult = result.areas[area];
   const structured = result.structuredAreas[area];
-  const meta = TYPE_METADATA[type as keyof typeof TYPE_METADATA];
+  const meta = getTypeMetadata(locale as 'zh-TW' | 'ko' | 'en')[type as import('@/domain/saju/types').SajuType];
 
   const otherAreas = AREA_KEYS.filter((k) => k !== area);
 

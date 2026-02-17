@@ -22,7 +22,7 @@ export default function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === '/') {
     // 1. 기존에 선택한 locale이 있으면 우선 적용 (NEXT_LOCALE 쿠키)
     const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
-    if (cookieLocale && validLocales.has(cookieLocale)) {
+    if (cookieLocale && validLocales.has(cookieLocale as 'zh-TW' | 'ko' | 'en')) {
       return NextResponse.redirect(new URL(`/${cookieLocale}`, request.url));
     }
 

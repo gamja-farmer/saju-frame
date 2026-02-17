@@ -7,6 +7,8 @@
 import type { FiveElement } from '@/domain/saju/types';
 import type { SajuType } from '@/domain/saju/types';
 
+export type Locale = 'zh-TW' | 'ko' | 'en';
+
 export interface TypeMetadata {
   /** 분석 코드 (예: "A1-木火型") */
   code: string;
@@ -16,8 +18,8 @@ export interface TypeMetadata {
   dominantElement: FiveElement;
   /** 부 오행 */
   subElement: FiveElement;
-  /** 身強/身弱/中和 판정 */
-  bodyStrength: '身強' | '身弱' | '中和';
+  /** 身強/身弱/中和 또는 신강/신약/중화 판정 */
+  bodyStrength: string;
   /** 身強/身弱 한 줄 설명 */
   bodyStrengthDesc: string;
   /** 喜用神 (예: "水、金") */
@@ -29,10 +31,10 @@ export interface TypeMetadata {
 }
 
 /**
- * 10개 타입 메타데이터.
+ * 10개 타입 메타데이터 (번체 중국어).
  * A그룹(1-5): 相生 조합, B그룹(1-5): 相剋/긴장 조합.
  */
-export const TYPE_METADATA: Record<SajuType, TypeMetadata> = {
+const TYPE_METADATA_ZH: Record<SajuType, TypeMetadata> = {
   'mu-huo-zhi-ren': {
     code: 'A1-木火型',
     label: '木火之人',
@@ -144,3 +146,136 @@ export const TYPE_METADATA: Record<SajuType, TypeMetadata> = {
     coreTraitSummary: '安靜的觀察者，厚積薄發但需學會適時讓自己被看見',
   },
 };
+
+/**
+ * 10개 타입 메타데이터 (한국어).
+ */
+const TYPE_METADATA_KO: Record<SajuType, TypeMetadata> = {
+  'mu-huo-zhi-ren': {
+    code: 'A1-목화형',
+    label: '목화인',
+    dominantElement: 'wood',
+    subElement: 'fire',
+    bodyStrength: '신강',
+    bodyStrengthDesc: '전체 에너지가 왕성하고, 자아의식과 행동력이 강하며, 적극적으로 개척하는 데 적합',
+    favorableGod: '水、金',
+    favorableGodDesc: '水는 과열을 막아주고, 金은 방향을 다듬어 열정 속에서 절제를 유지하게 돕습니다',
+    coreTraitSummary: '이상으로 행동을 이끌며 직관이 예리하지만 리듬 조절을 배울 필요가 있습니다',
+  },
+  'jin-shui-zhi-ren': {
+    code: 'A2-금수형',
+    label: '금수인',
+    dominantElement: 'metal',
+    subElement: 'water',
+    bodyStrength: '신강',
+    bodyStrengthDesc: '내면 에너지가 차분하고 날카로우며, 분석력과 판단력이 핵심 강점입니다',
+    favorableGod: '木、火',
+    favorableGodDesc: '木은 에너지를 밖으로 이끌고, 火는 지나치게 냉철한 내면을 따뜻하게 해 표현력을 돕습니다',
+    coreTraitSummary: '냉정히 관찰한 뒤 정확히 행동하며, 깊이 생각하지만 표현 타이밍에 유의해야 합니다',
+  },
+  'tu-jin-zhi-ren': {
+    code: 'A3-토금형',
+    label: '토금인',
+    dominantElement: 'earth',
+    subElement: 'metal',
+    bodyStrength: '신강',
+    bodyStrengthDesc: '에너지가 두터우며 견고하고, 인내심과 책임감이 가장 큰 특질입니다',
+    favorableGod: '木、水',
+    favorableGodDesc: '木은 고정된 구조를 느슨하게 하고, 水는 유연함을 더해 건실함 속 탄력을 유지하게 합니다',
+    coreTraitSummary: '꾸준히 실천하는 사람으로 믿음직하지만 지나치게 보수적이 되지 않도록 주의해야 합니다',
+  },
+  'shui-mu-zhi-ren': {
+    code: 'A4-수목형',
+    label: '수목인',
+    dominantElement: 'water',
+    subElement: 'wood',
+    bodyStrength: '중화',
+    bodyStrengthDesc: '에너지가 유동과 성장의 균형을 이루며, 적응력이 천부적 강점입니다',
+    favorableGod: '火、土',
+    favorableGodDesc: '火는 방향에 초점을 주고, 土는 안정된 토대를 마련해 유동 속에서 균형점을 찾게 합니다',
+    coreTraitSummary: '유연하고 탐험적인 성향으로 적응력이 뛰어나지만 방향감각을 의도적으로 키울 필요가 있습니다',
+  },
+  'huo-tu-zhi-ren': {
+    code: 'A5-화토형',
+    label: '화토인',
+    dominantElement: 'fire',
+    subElement: 'earth',
+    bodyStrength: '신강',
+    bodyStrengthDesc: '에너지가 따뜻하고 두터우며, 행동력과 책임감을 함께 갖춥니다',
+    favorableGod: '金、水',
+    favorableGodDesc: '金은 과한 헌신을 정리하고, 水는 식혀 고갈을 막아 남을 돌보는 동안 자신도 챙기게 합니다',
+    coreTraitSummary: '따뜻한 실행파로 타인을 잘 돌보지만 경계를 세우는 법을 배울 필요가 있습니다',
+  },
+  'mu-jin-zhi-ren': {
+    code: 'B1-목금형',
+    label: '목금인',
+    dominantElement: 'wood',
+    subElement: 'metal',
+    bodyStrength: '중화',
+    bodyStrengthDesc: '성장과 수렴의 힘이 역동적으로 균형을 이루며, 스스로를 바로잡는 기제가 있습니다',
+    favorableGod: '水、火',
+    favorableGodDesc: '水는 성장 에너지를 불려주고, 火는 목금 간 긴장을 풀어 확장과 수렴을 매끄럽게 합니다',
+    coreTraitSummary: '성장과 절제 사이에서 균형을 추구하며, 정제된 성향이지만 지나친 자기 요구를 피해야 합니다',
+  },
+  'jin-mu-zhi-ren': {
+    code: 'B2-금목형',
+    label: '금목인',
+    dominantElement: 'metal',
+    subElement: 'wood',
+    bodyStrength: '중화',
+    bodyStrengthDesc: '구조감과 성장력이 공존하며, 규칙 의식과 유연함을 함께 갖춥니다',
+    favorableGod: '水、土',
+    favorableGodDesc: '水는 금목 사이를 잇고, 土는 기반을 단단히 해 구조에 온기를 더합니다',
+    coreTraitSummary: '원칙 있는 건설자로 체계적 사고가 있지만 즉흥의 여지를 두는 것이 좋습니다',
+  },
+  'shui-huo-zhi-ren': {
+    code: 'B3-수화형',
+    label: '수화인',
+    dominantElement: 'water',
+    subElement: 'fire',
+    bodyStrength: '신약',
+    bodyStrengthDesc: '내면 에너지가 깊은 침잠과 폭발 사이를 오가며, 감정이 풍부하지만 표현에는 시간이 걸립니다',
+    favorableGod: '木、土',
+    favorableGodDesc: '木은 수화 에너지가 표출되게 하고, 土는 안정된 그릇이 되어 내면 세계가 담길 공간을 제공합니다',
+    coreTraitSummary: '깊은 감성가로 겉과 속이 다르지만 독특한 이중 시각을 지닙니다',
+  },
+  'huo-jin-zhi-ren': {
+    code: 'B4-화금형',
+    label: '화금인',
+    dominantElement: 'fire',
+    subElement: 'metal',
+    bodyStrength: '신강',
+    bodyStrengthDesc: '에너지가 넘치고 추진력이 강하며, 행동력과 결단력이 핵심 무기입니다',
+    favorableGod: '土、水',
+    favorableGodDesc: '土는 화금 충돌을 완충하고, 水는 식혀 주어 질주 후 회복할 여유를 줍니다',
+    coreTraitSummary: '결단력 있는 실행자로 목표가 분명하지만 행동과 대기 사이 리듬을 찾을 필요가 있습니다',
+  },
+  'tu-shui-zhi-ren': {
+    code: 'B5-토수형',
+    label: '토수인',
+    dominantElement: 'earth',
+    subElement: 'water',
+    bodyStrength: '신약',
+    bodyStrengthDesc: '에너지가 고요하고 깊으며, 겉으로는 차분하지만 내면은 표면보다 풍부하게 움직입니다',
+    favorableGod: '火、金',
+    favorableGodDesc: '火는 에너지에 온기와 동력을 주고, 金은 생각을 행동으로 바꾸어 내면의 풍요를 드러내게 합니다',
+    coreTraitSummary: '조용한 관찰자로 차곡차곡 쌓아가지만 때로 자신을 드러내는 것을 배울 필요가 있습니다',
+  },
+};
+
+/** en은 zh-TW 폴백 */
+const TYPE_METADATA_EN = TYPE_METADATA_ZH;
+
+const METADATA_BY_LOCALE: Record<Locale, Record<SajuType, TypeMetadata>> = {
+  'zh-TW': TYPE_METADATA_ZH,
+  ko: TYPE_METADATA_KO,
+  en: TYPE_METADATA_EN,
+};
+
+/** locale별 타입 메타데이터 조회 */
+export function getTypeMetadata(locale: Locale): Record<SajuType, TypeMetadata> {
+  return METADATA_BY_LOCALE[locale] ?? TYPE_METADATA_ZH;
+}
+
+/** @deprecated getTypeMetadata(locale)[type] 사용 */
+export const TYPE_METADATA = TYPE_METADATA_ZH;

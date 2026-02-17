@@ -25,6 +25,23 @@ export const GLOSSARY: Record<string, string> = {
   '相剋': '五行之間互相制約的關係，如金剋木、木剋土。',
 };
 
-/** 면책 성명 — 결과 페이지 하단 고정 문구 */
-export const DISCLAIMER =
+const DISCLAIMER_ZH =
   '以上解讀基於命盤結構的整體傾向分析，每個人的實際經歷會因成長環境、個人選擇等因素而有所不同。本分析提供的是一種理解自己的框架，而非絕對的判斷。';
+
+const DISCLAIMER_KO =
+  '위 해석은 명반 구조의 전체적 경향에 따른 분석이며, 실제 경험은 성장 환경과 개인 선택 등에 따라 다를 수 있습니다. 본 분석은 자신을 이해하는 하나의 틀을 제공할 뿐, 절대적인 판단이 아닙니다.';
+
+/** 면책 성명 — 결과 페이지 하단 고정 문구 (locale별) */
+export function getDisclaimer(locale: 'zh-TW' | 'ko' | 'en'): string {
+  switch (locale) {
+    case 'ko':
+      return DISCLAIMER_KO;
+    case 'zh-TW':
+    case 'en':
+    default:
+      return DISCLAIMER_ZH;
+  }
+}
+
+/** @deprecated getDisclaimer(locale) 사용 */
+export const DISCLAIMER = DISCLAIMER_ZH;
