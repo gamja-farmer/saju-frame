@@ -47,7 +47,7 @@ export default function middleware(request: NextRequest) {
       locale = cookieLocale && validLocales.has(cookieLocale as Locale) ? cookieLocale : defaultLocale;
     }
 
-    return NextResponse.redirect(new URL(`/${locale}?from=mw`, request.url));
+    return NextResponse.redirect(new URL(`/${locale}`, request.url));
   }
 
   return intlMiddleware(request);
