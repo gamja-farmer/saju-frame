@@ -24,7 +24,17 @@
     "health": "健康解讀",
     "viewDetail": "查看完整解讀",
     "backToOverview": "返回總覽",
-    "otherAreas": "其他面向"
+    "otherAreas": "其他面向",
+    "chartReading": "命盤解讀",
+    "coreSummary": "核心命盤摘要",
+    "elementDist": "分布",
+    "analysisProcess": "分析過程",
+    "structureBasis": "構造根據",
+    "tendencyDesc": "性向說明",
+    "strengthInterp": "優勢解讀",
+    "riskInterp": "風險解讀",
+    "practicalAdvice": "實際建議",
+    "auxiliaryNote": "補充說明"
   },
   "blog": {
     "title": "文章",

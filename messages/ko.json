@@ -24,7 +24,17 @@
     "health": "건강 해석",
     "viewDetail": "상세 해석 보기",
     "backToOverview": "전체 보기로 돌아가기",
-    "otherAreas": "다른 영역"
+    "otherAreas": "다른 영역",
+    "chartReading": "명반 해석",
+    "coreSummary": "핵심 명반 요약",
+    "elementDist": "분포",
+    "analysisProcess": "분석 과정",
+    "structureBasis": "구조 근거",
+    "tendencyDesc": "성향 설명",
+    "strengthInterp": "강점 해석",
+    "riskInterp": "리스크 해석",
+    "practicalAdvice": "실천 조언",
+    "auxiliaryNote": "보조 설명"
   },
   "blog": {
     "title": "글",

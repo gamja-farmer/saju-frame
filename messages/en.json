@@ -24,7 +24,17 @@
     "health": "Health reading",
     "viewDetail": "View full reading",
     "backToOverview": "Back to overview",
-    "otherAreas": "Other areas"
+    "otherAreas": "Other areas",
+    "chartReading": "Chart reading",
+    "coreSummary": "Core chart summary",
+    "elementDist": "Distribution",
+    "analysisProcess": "Analysis process",
+    "structureBasis": "Structural basis",
+    "tendencyDesc": "Tendency description",
+    "strengthInterp": "Strength interpretation",
+    "riskInterp": "Risk interpretation",
+    "practicalAdvice": "Practical advice",
+    "auxiliaryNote": "Supplementary notes"
   },
   "blog": {
     "title": "Articles",

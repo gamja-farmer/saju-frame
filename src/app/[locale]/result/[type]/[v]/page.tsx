@@ -7,15 +7,13 @@ import { routing } from '@/i18n/routing';
 import { SAJU_TYPES, isSajuType } from '@/domain/saju/types';
 import { AdBanner } from '@/components/AdBanner';
 import type { FiveElement } from '@/domain/saju/types';
-import { elementToChinese } from '@/domain/saju/elements';
 import {
   getFullVariantContent,
   VARIANT_COUNT,
   AREA_KEYS,
 } from '@/domain/interpretation/composer';
 import type { Locale, AreaKey } from '@/domain/interpretation/composer';
-import { GLOSSARY } from '@/domain/interpretation/glossary';
-import { STEP_TITLES } from '@/domain/interpretation/analysisSteps';
+import { getGlossaryDescription } from '@/domain/interpretation/glossary';
 
 type Props = { params: Promise<{ locale: string; type: string; v: string }> };
 
@@ -43,8 +41,9 @@ export async function generateMetadata({ params }: MetaProps): Promise<Metadata>
   for (const loc of routing.locales) {
     alternates[loc] = `${base}/${loc}/result/${type}/${v}`;
   }
+  const tMeta = await getTranslations({ locale, namespace: 'result' });
   return {
-    title: `命盤解讀：${type}`,
+    title: `${tMeta('chartReading')}：${type}`,
     description: `Chart interpretation for type ${type}, variant ${v}.`,
     alternates: { languages: alternates },
   };
@@ -66,9 +65,25 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? '';
 }
 
+/** 로케일별 핵심 용어 표기 (일주/喜用神/五行) */
+const GLOSSARY_TERM_BY_LOCALE: Record<
+  'zh-TW' | 'ko' | 'en',
+  { dayMaster: string; favorableGod: string; element: string }
+> = {
+  ko: { dayMaster: '일주', favorableGod: '희용신', element: '오행' },
+  'zh-TW': { dayMaster: '日主', favorableGod: '喜用神', element: '五行' },
+  en: { dayMaster: '日主', favorableGod: '喜用神', element: '五行' },
+};
+
 /** 용어에 data-tooltip 속성을 부여하는 헬퍼 */
-function Glossary({ term }: { term: string }) {
-  const desc = GLOSSARY[term];
+function Glossary({
+  term,
+  locale,
+}: {
+  term: string;
+  locale: 'zh-TW' | 'ko' | 'en';
+}) {
+  const desc = getGlossaryDescription(term, locale);
   if (!desc) return <span>{term}</span>;
   return (
     <span
@@ -80,10 +95,23 @@ function Glossary({ term }: { term: string }) {
   );
 }
 
+const ELEMENT_BY_LOCALE: Record<
+  'zh-TW' | 'ko' | 'en',
+  Record<FiveElement, string>
+> = {
+  ko: { wood: '목', fire: '화', earth: '토', metal: '금', water: '수' },
+  'zh-TW': { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
+  en: { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' },
+};
+
 /** 五行 분포를 한 줄 텍스트로 포맷 */
-function formatElementDist(dist: Record<FiveElement, number>): string {
+function formatElementDist(
+  dist: Record<FiveElement, number>,
+  locale: 'zh-TW' | 'ko' | 'en'
+): string {
   const order: FiveElement[] = ['wood', 'fire', 'earth', 'metal', 'water'];
-  return order.map((el) => `${elementToChinese(el)} ${dist[el]}%`).join(' · ');
+  const labels = ELEMENT_BY_LOCALE[locale];
+  return order.map((el) => `${labels[el]} ${dist[el]}%`).join(' · ');
 }
 
 export default async function ResultVariantPage({ params }: Props) {
@@ -114,13 +142,19 @@ export default async function ResultVariantPage({ params }: Props) {
       {/* ── 핵심 명반 요약 (문단 기반, 표 금지) ── */}
       <section className="pt-xl">
         <h2 className="text-section font-heading leading-[1.4]">
-          核心命盤摘要
+          {t('coreSummary')}
         </h2>
 
         <div className="mt-md flex flex-col gap-sm">
           <p className="text-body leading-[1.8]">
             <span className="text-accent-primary">
-              <Glossary term="日主" />
+              <Glossary
+                term={
+                  GLOSSARY_TERM_BY_LOCALE[locale as 'zh-TW' | 'ko' | 'en']
+                    .dayMaster
+                }
+                locale={locale as 'zh-TW' | 'ko' | 'en'}
+              />
             </span>
             {' — '}
             {result.summary.dayMaster.value}
@@ -130,7 +164,7 @@ export default async function ResultVariantPage({ params }: Props) {
 
           <p className="text-body leading-[1.8]">
             <span className="text-accent-primary">
-              <Glossary term={result.summary.bodyStrength.value} />
+              <Glossary term={result.summary.bodyStrength.value} locale={locale as 'zh-TW' | 'ko' | 'en'} />
             </span>
             {' — '}
             {result.summary.bodyStrength.desc}
@@ -138,7 +172,13 @@ export default async function ResultVariantPage({ params }: Props) {
 
           <p className="text-body leading-[1.8]">
             <span className="text-accent-primary">
-              <Glossary term="喜用神" />
+              <Glossary
+                term={
+                  GLOSSARY_TERM_BY_LOCALE[locale as 'zh-TW' | 'ko' | 'en']
+                    .favorableGod
+                }
+                locale={locale as 'zh-TW' | 'ko' | 'en'}
+              />
             </span>
             {' — '}
             {result.summary.favorableGod.value}
@@ -149,10 +189,20 @@ export default async function ResultVariantPage({ params }: Props) {
           {/* 五行 분포: 접기(toggle) */}
           <details className="mt-sm">
             <summary className="cursor-pointer text-small text-text-secondary hover:text-accent-primary transition-colors duration-200">
-              <Glossary term="五行" />分布
+              <Glossary
+                term={
+                  GLOSSARY_TERM_BY_LOCALE[locale as 'zh-TW' | 'ko' | 'en']
+                    .element
+                }
+                locale={locale as 'zh-TW' | 'ko' | 'en'}
+              />{' '}
+              {t('elementDist')}
             </summary>
             <p className="mt-sm text-body text-text-secondary leading-[1.8]">
-              {formatElementDist(result.summary.elementDistribution)}
+              {formatElementDist(
+                result.summary.elementDistribution,
+                locale as 'zh-TW' | 'ko' | 'en'
+              )}
             </p>
           </details>
         </div>
@@ -164,15 +214,15 @@ export default async function ResultVariantPage({ params }: Props) {
       {/* ── 분석 단계 ── */}
       <section>
         <h2 className="text-section font-heading leading-[1.4]">
-          分析過程
+          {t('analysisProcess')}
         </h2>
 
         {/* 단계 진행 표시 */}
         <nav className="mt-md flex flex-wrap gap-xs text-small text-text-muted">
-          {STEP_TITLES.map((title, i) => (
-            <span key={title}>
+          {result.analysisSteps.map((step, i) => (
+            <span key={step.title}>
               {i > 0 && <span className="mx-xs">→</span>}
-              {`${i + 1}. ${title}`}
+              {`${i + 1}. ${step.title}`}
             </span>
           ))}
         </nav>
@@ -196,7 +246,10 @@ export default async function ResultVariantPage({ params }: Props) {
             )}
             {i === 1 && (
               <p className="mt-sm text-body text-text-secondary leading-[1.8]">
-                {formatElementDist(result.summary.elementDistribution)}
+                {formatElementDist(
+                  result.summary.elementDistribution,
+                  locale as 'zh-TW' | 'ko' | 'en'
+                )}
               </p>
             )}
           </article>

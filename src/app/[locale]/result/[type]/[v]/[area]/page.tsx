@@ -52,15 +52,11 @@ export async function generateMetadata({ params }: MetaProps): Promise<Metadata>
   for (const loc of routing.locales) {
     alternates[loc] = `${base}/${loc}/result/${type}/${v}/${area}`;
   }
-  const areaLabels: Record<AreaKey, string> = {
-    wealth: '財運',
-    love: '感情',
-    career: '事業',
-    health: '健康',
-  };
+  const tMeta = await getTranslations({ locale, namespace: 'result' });
+  const areaTitle = tMeta(area);
   return {
-    title: `${areaLabels[area]}解讀：${type}`,
-    description: `${areaLabels[area]} interpretation for type ${type}, variant ${v}.`,
+    title: `${areaTitle}：${type}`,
+    description: `${areaTitle} interpretation for type ${type}, variant ${v}.`,
     alternates: { languages: alternates },
   };
 }
@@ -81,14 +77,6 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? '';
 }
 
-/** 구조화 5섹션 라벨 */
-const SECTION_LABELS = {
-  structureBasis: '構造根據',
-  tendencyDesc: '性向說明',
-  strengthInterp: '優勢解讀',
-  riskInterp: '風險解讀',
-  practicalAdvice: '實際建議',
-} as const;
 
 export default async function AreaDetailPage({ params }: Props) {
   const { locale, type, v, area } = await params;
@@ -102,6 +90,13 @@ export default async function AreaDetailPage({ params }: Props) {
   }
   setRequestLocale(locale);
   const t = await getTranslations('result');
+  const sectionLabels = {
+    structureBasis: t('structureBasis'),
+    tendencyDesc: t('tendencyDesc'),
+    strengthInterp: t('strengthInterp'),
+    riskInterp: t('riskInterp'),
+    practicalAdvice: t('practicalAdvice'),
+  };
   const variantIndex = parseInt(v, 10);
   const result = getFullVariantContent(type, variantIndex, locale as Locale);
   const areaResult = result.areas[area];
@@ -143,7 +138,7 @@ export default async function AreaDetailPage({ params }: Props) {
         <section className="flex flex-col">
           <article>
             <h3 className="text-sub font-heading leading-[1.4]">
-              {SECTION_LABELS.structureBasis}
+              {sectionLabels.structureBasis}
             </h3>
             <p className="mt-sm text-body text-text-primary leading-[1.8]">
               {structured.structureBasis}
@@ -154,7 +149,7 @@ export default async function AreaDetailPage({ params }: Props) {
 
           <article>
             <h3 className="text-sub font-heading leading-[1.4]">
-              {SECTION_LABELS.tendencyDesc}
+              {sectionLabels.tendencyDesc}
             </h3>
             <p className="mt-sm text-body text-text-primary leading-[1.8]">
               {structured.tendencyDesc}
@@ -165,7 +160,7 @@ export default async function AreaDetailPage({ params }: Props) {
 
           <article>
             <h3 className="text-sub font-heading leading-[1.4]">
-              {SECTION_LABELS.strengthInterp}
+              {sectionLabels.strengthInterp}
             </h3>
             <p className="mt-sm text-body text-text-primary leading-[1.8]">
               {structured.strengthInterp}
@@ -176,7 +171,7 @@ export default async function AreaDetailPage({ params }: Props) {
 
           <article>
             <h3 className="text-sub font-heading leading-[1.4]">
-              {SECTION_LABELS.riskInterp}
+              {sectionLabels.riskInterp}
             </h3>
             <p className="mt-sm text-body text-text-primary leading-[1.8]">
               {structured.riskInterp}
@@ -187,7 +182,7 @@ export default async function AreaDetailPage({ params }: Props) {
 
           <article>
             <h3 className="text-sub font-heading leading-[1.4]">
-              {SECTION_LABELS.practicalAdvice}
+              {sectionLabels.practicalAdvice}
             </h3>
             <p className="mt-sm text-body text-text-primary leading-[1.8]">
               {structured.practicalAdvice}
@@ -211,7 +206,7 @@ export default async function AreaDetailPage({ params }: Props) {
           <hr className="my-xl" />
           <section>
             <h3 className="text-sub font-heading leading-[1.4]">
-              補充說明
+              {t('auxiliaryNote')}
             </h3>
             <div className="mt-md flex flex-col gap-sm">
               {areaResult.auxiliaries.situationEmphasis && (
