@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { routing } from '@/i18n/routing';
 import { SAJU_TYPES, isSajuType } from '@/domain/saju/types';
+import { AdBanner } from '@/components/AdBanner';
 import {
   getFullVariantContent,
   VARIANT_COUNT,
@@ -243,8 +244,8 @@ export default async function AreaDetailPage({ params }: Props) {
       <hr className="my-xl" />
 
       {/* ── 광고 슬롯 (하단 70% 이후) ── */}
-      <aside className="my-lg flex items-center justify-center min-h-[90px] border border-divider rounded-card">
-        <span className="text-small text-text-muted">Ad</span>
+      <aside className="my-lg">
+        <AdBanner />
       </aside>
 
       {/* ── 다른 영역으로 이동 ── */}

@@ -28,6 +28,35 @@
   },
   "blog": {
     "title": "Articles",
-    "back": "Back to list"
+    "subtitle": "Rediscover yourself through the language of destiny.",
+    "back": "Back to list",
+    "ctaText": "Curious about your chart? Check your reading for free.",
+    "relatedPosts": "Related articles"
+  },
+  "footer": {
+    "blog": "Articles",
+    "about": "About",
+    "privacy": "Privacy Policy"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "collectTitle": "Information We Collect",
+    "collectBody": "When you use the chart reading feature, we receive the birth date, birth time, and gender you enter. This data is used only for real-time chart calculation and is not stored on our servers or shared with any third parties.",
+    "cookieTitle": "Cookies",
+    "cookieBody": "This website may use cookies to support Google AdSense advertising. These cookies are managed by Google and are used to serve relevant ads based on your browsing behavior. You can manage or disable cookies in your browser settings.",
+    "thirdPartyTitle": "Third-Party Advertising",
+    "thirdPartyBody": "This website uses Google AdSense for advertising. Google may show you relevant ads based on your visits to this site or other websites. For more information or to opt out of personalized advertising, visit the Google Ads settings page.",
+    "changesTitle": "Changes to This Policy",
+    "changesBody": "We may update this privacy policy from time to time. Any changes will be posted on this page with the updated date.",
+    "lastUpdated": "Last updated: February 17, 2026"
+  },
+  "about": {
+    "title": "About This Service",
+    "purposeTitle": "Our Philosophy",
+    "purposeBody": "The core of this service is not 'telling your fortune' but 'helping you understand yourself.' Through the language of BaZi (Chinese astrology), we offer a perspective to rediscover your energy structure, personality tendencies, and life rhythm. This is not prediction — it is understanding.",
+    "approachTitle": "Our Approach",
+    "approachBody": "BaZi astrology is based on your birth year, month, day, and time. Through the interaction of Heavenly Stems, Earthly Branches, and the Five Elements, it reveals your innate energy distribution. What we do is translate this ancient language into modern, accessible readings — giving you one more lens to understand yourself when facing life's choices.",
+    "disclaimerTitle": "Disclaimer",
+    "disclaimerBody": "All content provided by this service is reference-based interpretation grounded in BaZi astrology and does not constitute medical, legal, financial, or life decision advice of any kind. Chart readings cannot predict specific events or outcomes. Please use this service as a supplementary tool for self-understanding, and consult relevant professionals for important decisions."
   }
 }

@@ -1,7 +1,10 @@
 import { headers } from 'next/headers';
+import Script from 'next/script';
 import { Noto_Serif_TC, Noto_Sans_TC } from 'next/font/google';
 import { routing } from '@/i18n/routing';
 import './globals.css';
+
+const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
 
 const notoSerifTC = Noto_Serif_TC({
   subsets: ['latin'],
@@ -31,7 +34,16 @@ export default async function RootLayout({
       className={`${notoSerifTC.variable} ${notoSansTC.variable}`}
       suppressHydrationWarning
     >
+
       <body className="font-body" suppressHydrationWarning>
+        {adsenseId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+            crossOrigin="anonymous"
+            strategy="lazyOnload"
+          />
+        )}
         {children}
       </body>
     </html>
